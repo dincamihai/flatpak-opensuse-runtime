@@ -7,6 +7,7 @@ clean:
 PROXY=
 VERSION=1
 ARCH=x86_64
+LEAP_VERSION=42.2
 
 repo/config:
 	ostree init --repo=repo --mode=bare-user
@@ -14,14 +15,14 @@ repo/config:
 exportrepo/config:
 	ostree init --repo=exportrepo --mode=archive-z2
 
-repo/refs/heads/base/org.openSUSE.Runtime/$(ARCH)/$(VERSION): repo/config leap-42.1.kiwi config.sh
+repo/refs/heads/base/org.openSUSE.Runtime/$(ARCH)/$(VERSION): repo/config leap-$(LEAP_VERSION).kiwi config.sh
 	sudo rm -rf buildroot
 	sudo kiwi --profile="runtime" system prepare --root=$$PWD/buildroot --description=$$PWD
 	sudo ./prepare-to-ostree.sh
 	sudo ostree --repo=repo commit -s 'initial build' -b base/org.openSUSE.Runtime/$(ARCH)/$(VERSION) --tree=dir=$$PWD/buildroot-prepare
 	sudo chown -R `whoami` repo
 
-repo/refs/heads/base/org.openSUSE.Sdk/$(ARCH)/$(VERSION): repo/config leap-42.1.kiwi config.sh
+repo/refs/heads/base/org.openSUSE.Sdk/$(ARCH)/$(VERSION): repo/config leap-$(LEAP_VERSION).kiwi config.sh
 	sudo rm -rf buildroot
 	sudo kiwi --profile="sdk" system prepare --root=$$PWD/buildroot --description=$$PWD
 	sudo ./prepare-to-ostree.sh
